@@ -32,3 +32,15 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+
+/backend/yarn/*
+!/backend/yarn/patches
+!/backend/yarn/plugins
+!/backend/yarn/releases
+!/backend/yarn/sdks
+
+# Swap the comments on the following lines if you don't wish to use zero-installs
+# Documentation here: https://yarnpkg.com/features/zero-installs
+!/backend/yarn/cache
+#/.pnp.*
