@@ -1,10 +1,10 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-/.yarn/*
-!/.yarn/patches
-!/.yarn/plugins
-!/.yarn/releases
-!/.yarn/sdks
+/client/.yarn/*
+!/client/.yarn/patches
+!/client/.yarn/plugins
+!/client/.yarn/releases
+!/client/.yarn/sdks
 
 # Swap the comments on the following lines if you don't wish to use zero-installs
 # Documentation here: https://yarnpkg.com/features/zero-installs
@@ -34,13 +34,13 @@ yarn-debug.log*
 yarn-error.log*
 
 
-/backend/yarn/*
-!/backend/yarn/patches
-!/backend/yarn/plugins
-!/backend/yarn/releases
-!/backend/yarn/sdks
+/backend/.yarn/*
+!/backend/.yarn/patches
+!/backend/.yarn/plugins
+!/backend/.yarn/releases
+!/backend/.yarn/sdks
 
 # Swap the comments on the following lines if you don't wish to use zero-installs
 # Documentation here: https://yarnpkg.com/features/zero-installs
-!/backend/yarn/cache
+!/backend/.yarn/cache
 #/.pnp.*
