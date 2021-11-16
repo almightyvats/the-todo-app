@@ -12,33 +12,30 @@ const App: FC = () => {
 
   useEffect(() => {
     socket.emit("intial-todo-fetch");
-    socket.on("todo-all-fetched", (payload: ITask[]) => {      
+    socket.on("todo-all-fetched", (payload: ITask[]) => {
       setTodoArray(payload);
     });
-    
-  }, [todoArray]);
+    console.log("Inside all");
+  }, []);
 
-  const handleBtnPress = (event: React.MouseEvent<HTMLElement>) : void => {
+  const handleBtnPress = (event: React.MouseEvent<HTMLElement>): void => {
     event.preventDefault();
     socket.emit("add-todo", todo);
     setTodo("");
   }
-  
+
   useEffect(() => {
     socket.on("todo-added", (payload: ITask) => {
       setTodoArray([...todoArray, payload]);
-    })
+    });
+    socket.on("todo-modified", (payload: ITask[]) => {
+      setTodoArray(payload);
+    });
   }, [todoArray]);
-  
+
   const handleTaskCompletion = (taskToSetComplete: string): void => {
     socket.emit("modify-todo", taskToSetComplete);
   }
-
-  useEffect(() => {
-    socket.on("todo-modified", (payload: ITask[]) => {
-      setTodoArray(payload);
-    })
-  }, [todoArray]);
 
   return (
     <div>
@@ -49,15 +46,16 @@ const App: FC = () => {
           value={todo}
           onChange={e => { setTodo(e.target.value) }}
         />
-          <button
-            onClick={
-              event => handleBtnPress(event)}
-          >Add Todo</button>
-      <div className="h-screen flex justify-center items-center bg-gray-100">
+        <button
+          name="add-button"
+          onClick={
+            event => handleBtnPress(event)}
+        >Add Todo</button>
+        <div className="border-red">
           {todoArray.map((todo, index) => {
             return (
               <h2 key={index}>
-                <Todo todo={todo} toggleTaskState={handleTaskCompletion}/>
+                <Todo todo={todo} toggleTaskState={handleTaskCompletion} />
               </h2>
             )
           })}

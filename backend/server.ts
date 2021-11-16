@@ -24,7 +24,7 @@ io.on("connection", function(socket: any) {
     socket.on("add-todo", function(todo: string) {
       let newTodo: ITodo = {taskName: todo, taskCompleted: false};
       todoArray.push(newTodo);      
-      socket.emit("todo-added", newTodo);
+      io.emit("todo-added", newTodo);
 
       console.log("msg: ", todoArray);
     });
@@ -35,11 +35,11 @@ io.on("connection", function(socket: any) {
           element.taskCompleted = !element.taskCompleted;
         }
       });
-      socket.emit("todo-modified", todoArray);
+      io.emit("todo-modified", todoArray);
     });
 
     socket.on("intial-todo-fetch", function() {
-      socket.emit("todo-all-fetched", todoArray);
+      io.emit("todo-all-fetched", todoArray);
       console.log("msg-all", todoArray);
     });
   });
