@@ -1,5 +1,4 @@
 import { useState, useEffect, FC } from 'react';
-import './App.css';
 import Todo from './components/todo.component';
 import { ITask } from './intefaces/task.interface'
 
@@ -12,46 +11,58 @@ const App: FC = () => {
   const [todoArray, setTodoArray] = useState<ITask[]>([]);
 
   useEffect(() => {
-    socket.on("todo-added", (payload) => {
-      let newTask: ITask = { taskName: payload, taskCompleted: false};
-      setTodoArray([...todoArray, newTask]);
-    })
+    socket.emit("intial-todo-fetch");
+    socket.on("todo-all-fetched", (payload: ITask[]) => {      
+      setTodoArray(payload);
+    });
+    
   }, [todoArray]);
 
   const handleBtnPress = (event: React.MouseEvent<HTMLElement>) : void => {
     event.preventDefault();
-    socket.emit("msg", todo);
+    socket.emit("add-todo", todo);
     setTodo("");
   }
-
-  const handleTaskCompletion = (taskToSetComplete: string) => {
-
+  
+  useEffect(() => {
+    socket.on("todo-added", (payload: ITask) => {
+      setTodoArray([...todoArray, payload]);
+    })
+  }, [todoArray]);
+  
+  const handleTaskCompletion = (taskToSetComplete: string): void => {
+    socket.emit("modify-todo", taskToSetComplete);
   }
 
+  useEffect(() => {
+    socket.on("todo-modified", (payload: ITask[]) => {
+      setTodoArray(payload);
+    })
+  }, [todoArray]);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <div>
-          {todoArray.map((todo, index) => {
-            return (
-              <h2 key={index}>
-                <Todo todo={todo}/>
-              </h2>
-            )
-          })}
-        </div>
+    <div>
+      <header>
         <input
           type="text"
           placeholder="Add Todo here"
           value={todo}
           onChange={e => { setTodo(e.target.value) }}
         />
+          <button
+            onClick={
+              event => handleBtnPress(event)}
+          >Add Todo</button>
+      <div className="h-screen flex justify-center items-center bg-gray-100">
+          {todoArray.map((todo, index) => {
+            return (
+              <h2 key={index}>
+                <Todo todo={todo} toggleTaskState={handleTaskCompletion}/>
+              </h2>
+            )
+          })}
+        </div>
 
-        <button
-          onClick={
-            event => handleBtnPress(event)}
-        >Add Todo</button>
 
       </header>
     </div>
