@@ -13,11 +13,13 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/react-redux": "^7.1.7",
+    "postcss": "^7",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.0",
     "react-scripts": "4.0.3",
     "socket.io-client": "^4.3.2",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@latest",
     "typescript": "~4.1.5"
   },
   "scripts": {
@@ -44,9 +46,7 @@
   "devDependencies": {
     "@types/socket.io-client": "^3.0.0",
     "autoprefixer": "^9",
-    "eslint-config-react-app": "^6.0.0",
-    "postcss": "^7",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2"
+    "eslint-config-react-app": "^6.0.0"
   },
   "packageManager": "yarn@3.1.0"
 }

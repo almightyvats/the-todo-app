@@ -14849,7 +14849,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tailwindcss@npm:@tailwindcss/postcss7-compat@^2":
+"tailwindcss@npm:@tailwindcss/postcss7-compat@latest":
   version: 2.2.17
   resolution: "@tailwindcss/postcss7-compat@npm:2.2.17"
   dependencies:
@@ -15063,7 +15063,7 @@ __metadata:
     react-redux: ^7.2.0
     react-scripts: 4.0.3
     socket.io-client: ^4.3.2
-    tailwindcss: "npm:@tailwindcss/postcss7-compat@^2"
+    tailwindcss: "npm:@tailwindcss/postcss7-compat@latest"
     typescript: ~4.1.5
   languageName: unknown
   linkType: soft

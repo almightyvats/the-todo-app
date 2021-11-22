@@ -3,11 +3,11 @@ import Todo from './components/todo.component';
 import { ITask } from './intefaces/task.interface'
 
 import io from "socket.io-client";
+import AddTodo from './components/addTodo.component';
 const socket = io("http://localhost:5000");
 
 const App: FC = () => {
 
-  const [todo, setTodo] = useState<string>("");
   const [todoArray, setTodoArray] = useState<ITask[]>([]);
 
   useEffect(() => {
@@ -18,10 +18,9 @@ const App: FC = () => {
     console.log("Inside all");
   }, []);
 
-  const handleBtnPress = (event: React.MouseEvent<HTMLElement>): void => {
+  const handleBtnPress = (event: React.MouseEvent<HTMLElement>, todo: string): void => {
     event.preventDefault();
     socket.emit("add-todo", todo);
-    setTodo("");
   }
 
   useEffect(() => {
@@ -38,31 +37,17 @@ const App: FC = () => {
   }
 
   return (
-    <div>
-      <header>
-        <input
-          type="text"
-          placeholder="Add Todo here"
-          value={todo}
-          onChange={e => { setTodo(e.target.value) }}
-        />
-        <button
-          name="add-button"
-          onClick={
-            event => handleBtnPress(event)}
-        >Add Todo</button>
-        <div className="border-red">
-          {todoArray.map((todo, index) => {
-            return (
-              <h2 key={index}>
-                <Todo todo={todo} toggleTaskState={handleTaskCompletion} />
-              </h2>
-            )
-          })}
-        </div>
-
-
-      </header>
+    <div className="bg-gray-600">
+      <AddTodo handlButtonPress={handleBtnPress} />
+      <div className="border-2 border-red-500 p-4">
+        {todoArray.map((todo, index) => {
+          return (
+            <h2 key={index}>
+              <Todo todo={todo} toggleTaskState={handleTaskCompletion} />
+            </h2>
+          )
+        })}
+      </div>
     </div>
   );
 }
