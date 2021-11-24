@@ -15,9 +15,9 @@ const initialState: TodoState = {
 export const loadTodos = createAsyncThunk(
     'todos/loadTodos',
     () => {
-        socket.emit("intial-todo-fetch");
+        socket.emit("fetchAllTodos");
         return new Promise<ITask[]>((resolve, reject) => {
-            socket.once("todo-all-fetched", (_payload) => {
+            socket.once("allTodosFetched", (_payload) => {
                 resolve(_payload);
             });
         });
@@ -27,9 +27,9 @@ export const loadTodos = createAsyncThunk(
 export const modifyTodo = createAsyncThunk(
     'todos/modifyTodo',
     (taskToSetComplete: string) => {
-        socket.emit("modify-todo", taskToSetComplete);
+        socket.emit("modifyTodo", taskToSetComplete);
         return new Promise<ITask[]>((resolve, reject) => {
-            socket.once("todo-modified", (_payload) => {
+            socket.once("todoModified", (_payload) => {
                 resolve(_payload);
             })
         });
@@ -39,9 +39,9 @@ export const modifyTodo = createAsyncThunk(
 export const addTodo = createAsyncThunk(
     'todos/addTodo',
     (todo: string) => {
-        socket.emit("add-todo", todo);
+        socket.emit("addTodo", todo);
         return new Promise<ITask>((resolve, reject) => {
-            socket.once("todo-added", (_payload) => {
+            socket.once("todoAdded", (_payload) => {
                 resolve(_payload);
             })
         });

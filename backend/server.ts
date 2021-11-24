@@ -1,15 +1,9 @@
 import express from "express";
-
+import { Server } from 'socket.io';
 const app = express();
 const port = 5000;
 
 const server = require('http').createServer(app);
-
-const io = require('socket.io')(server, {
-    cors: {
-        origin: "*",
-    },
-});
 
 interface ITodo {
   taskName: string;
@@ -18,31 +12,49 @@ interface ITodo {
 
 let todoArray: ITodo[] = [];
 
-io.on("connection", function(socket: any) {
-    console.log("a user connected");
+interface ServerToClientEvents {
+  todoAdded: (todo: ITodo) => void;
+  todoModified: (todos: ITodo[]) => void;
+  allTodosFetched: (todos: ITodo[]) => void;
+}
 
-    socket.on("add-todo", function(todo: string) {
-      let newTodo: ITodo = {taskName: todo, taskCompleted: false};
-      todoArray.push(newTodo);      
-      io.emit("todo-added", newTodo);
+interface ClientToServerEvents {
+  addTodo: (todo: string) => void;
+  modifyTodo: (todoToSetComplete: string) => void;
+  fetchAllTodos: () => void;
+}
 
-      console.log("msg: ", todoArray);
-    });
+const io = new Server<ClientToServerEvents, ServerToClientEvents>(server, {
+  cors: {
+    origin: "*",
+  }
+});
 
-    socket.on("modify-todo", function(todoToSetComplete: string) {
-      todoArray.forEach(element => {
-        if (element.taskName === todoToSetComplete) {
-          element.taskCompleted = !element.taskCompleted;
-        }
-      });
-      io.emit("todo-modified", todoArray);
-    });
+io.on("connection", function (socket) {
+  console.log("a user connected");
 
-    socket.on("intial-todo-fetch", function() {
-      io.emit("todo-all-fetched", todoArray);
-      console.log("msg-all", todoArray);
-    });
+  socket.on("addTodo", (todo) => {
+    let newTodo: ITodo = { taskName: todo, taskCompleted: false };
+    todoArray.push(newTodo);
+    io.emit("todoAdded", newTodo);
+
+    console.log("msg: ", todoArray);
   });
+
+  socket.on("modifyTodo", (todoToSetComplete) => {
+    todoArray.forEach(element => {
+      if (element.taskName === todoToSetComplete) {
+        element.taskCompleted = !element.taskCompleted;
+      }
+    });
+    io.emit("todoModified", todoArray);
+  });
+
+  socket.on("fetchAllTodos", () => {
+    io.emit("allTodosFetched", todoArray);
+    console.log("msg-all", todoArray);
+  })
+});
 
 
 server.listen(port, () => console.log(`Example app listening on port ${port}!`));
