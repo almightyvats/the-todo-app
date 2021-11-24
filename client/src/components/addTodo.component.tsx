@@ -2,7 +2,7 @@ import { FC, useState } from 'react'
 
 type AddTodoProps = {
     handlButtonPress(event: React.MouseEvent<HTMLElement>, todo: string): void;
-}
+};
 
 const AddTodo: FC<AddTodoProps> = ({ handlButtonPress }) => {
     const [todo, setTodo] = useState<string>("");

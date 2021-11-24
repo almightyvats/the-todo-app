@@ -1,46 +1,37 @@
-import { useState, useEffect, FC } from 'react';
+import { useEffect, FC } from 'react';
 import Todo from './components/todo.component';
-import { ITask } from './intefaces/task.interface'
+import { useAppSelector, useAppDispatch } from './app/hooks';
 
-import io from "socket.io-client";
 import AddTodo from './components/addTodo.component';
-const socket = io("http://localhost:5000");
+import {
+  loadTodos, addTodo, modifyTodo,
+  selectTodos
+} from './features/todos/todoSlice';
+
 
 const App: FC = () => {
 
-  const [todoArray, setTodoArray] = useState<ITask[]>([]);
+  const dispatch = useAppDispatch();
+  const todos = useAppSelector(selectTodos);
 
   useEffect(() => {
-    socket.emit("intial-todo-fetch");
-    socket.on("todo-all-fetched", (payload: ITask[]) => {
-      setTodoArray(payload);
-    });
-    console.log("Inside all");
-  }, []);
+    dispatch(loadTodos());
+  }, [dispatch]);
 
   const handleBtnPress = (event: React.MouseEvent<HTMLElement>, todo: string): void => {
     event.preventDefault();
-    socket.emit("add-todo", todo);
+    dispatch(addTodo(todo));
   }
 
-  useEffect(() => {
-    socket.on("todo-added", (payload: ITask) => {
-      setTodoArray([...todoArray, payload]);
-    });
-    socket.on("todo-modified", (payload: ITask[]) => {
-      setTodoArray(payload);
-    });
-  }, [todoArray]);
-
   const handleTaskCompletion = (taskToSetComplete: string): void => {
-    socket.emit("modify-todo", taskToSetComplete);
+    dispatch(modifyTodo(taskToSetComplete));
   }
 
   return (
     <div className="bg-gray-600">
       <AddTodo handlButtonPress={handleBtnPress} />
       <div className="border-2 border-red-500 p-4">
-        {todoArray.map((todo, index) => {
+        {todos.map((todo, index) => {
           return (
             <h2 key={index}>
               <Todo todo={todo} toggleTaskState={handleTaskCompletion} />
